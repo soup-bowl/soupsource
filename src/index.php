@@ -25,9 +25,19 @@ class main {
 				)
 			);
 		} else {
-			$this->printer(
-				'Error 404'
-			);
+			http_response_code( 404 );
+			$error404page = __DIR__ . '/pages/404.md';
+			if ( file_exists( $error404page ) ) {
+				$this->printer(
+					$this->parser->text(
+						file_get_contents( $error404page )
+					)
+				);
+			} else {
+				$this->printer(
+					'Cannot find the requested page.'
+				);
+			}
 		}
 	}
 
