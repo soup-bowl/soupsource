@@ -6,6 +6,8 @@ class main {
 	protected $parser;
 	public function __construct( Parsedown $parser ) {
 		$this->parser = $parser;
+
+		$this->loadSettings();
 	}
 
 	/**
@@ -14,15 +16,31 @@ class main {
 	 * @return void
 	 */
 	public function run():void {
-		echo '<pre>';var_dump($_SERVER);echo '</pre>';
+		//echo '<pre>';var_dump($_SERVER);echo '</pre>';
 		$md = $this->urlParser( $_SERVER['REQUEST_URI'] );
 		if ( isset( $md ) ) {
-			echo $this->parser->text(
-				file_get_contents( $md )
+			$this->printer(
+				$this->parser->text(
+					file_get_contents( $md )
+				)
 			);
 		} else {
-			echo 'Error 404';
+			$this->printer(
+				'Error 404'
+			);
 		}
+	}
+
+	/**
+	 * Last function to run. Will output the recieved content onto the page.
+	 *
+	 * @param string $content The content to be displayed.
+	 * @return void Prints to the page.
+	 */
+	private function printer( string $content ):void {
+		include SITE_THEME . '/header.php';
+		echo $content;
+		include SITE_THEME . '/footer.php';
 	}
 
 	/**
@@ -31,7 +49,7 @@ class main {
 	 * @param string $request_uri The request string (starting with slash).
 	 * @return string Filesystem path, relative to the root.
 	 */
-	private function urlParser( $request_uri ):?string {
+	private function urlParser( string $request_uri ):?string {
 		if ( $request_uri === '/' ) {
 			if ( file_exists( __DIR__ . '/pages/index.md' ) ) {
 				return __DIR__ . '/pages/index.md';
@@ -46,6 +64,29 @@ class main {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Loads the configuration variables into constants.
+	 *
+	 * @return void Variables in site.json are loaded into SITE_XXX in constants.
+	 */
+	private function loadSettings():void {
+		$prefix   = 'SITE_';
+		$confFile = __DIR__ . '/site.json';
+		if ( file_exists( $confFile ) ) {
+			$decoded = json_decode( file_get_contents( $confFile ) );
+			foreach ( $decoded as $key => $value ) {
+				if ( $key === 'theme' && ! empty( $value ) ) {
+					$value = realpath( __DIR__ . '/themes/' . $value );
+				}
+
+				define( $prefix . strtoupper( $key ), ( ! empty( $value ) ? $value : null ) );
+			}
+		}
+
+		// Defaults
+		( defined( "{$prefix}TITLE" ) ? null : define( "{$prefix}TITLE", 'Undefined' ) );
 	}
 }
 
