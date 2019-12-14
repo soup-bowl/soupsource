@@ -90,7 +90,7 @@ class main {
 		foreach ( $menu_array->nodes as $node ) {
 			$li     = ( ! empty( $node->liclass ) ) ? "<li class='{$node->liclass}'>" : '<li>';
 			$aClass = ( ! empty( $node->class ) ) ? " class='{$node->class}'" : null;
-			$nodes .= "{$li}<a href='{$node->url}'{$aClass}>{$node->label}</li>";
+			$nodes .= "{$li}<a href='{$node->url}'{$aClass}>{$node->label}</a></li>";
 		}
 
 		return $begin . $nodes . $end;
