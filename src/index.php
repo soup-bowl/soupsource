@@ -75,6 +75,26 @@ class main {
 			return null;
 		}
 	}
+
+	/**
+	 * Generates menu HTML for display.
+	 *
+	 * @param stdClass $menu_array
+	 * @return string HTML output.
+	 */
+	private function menuGenerator( stdClass $menu_array ):string {
+		$begin = ( ! empty( $menu_array->class ) ) ? "<ul class='{$menu_array->class}'>" : '<ul>';
+		$end   = '</ul>';
+		$nodes = '';
+
+		foreach ( $menu_array->nodes as $node ) {
+			$li     = ( ! empty( $node->liclass ) ) ? "<li class='{$node->liclass}'>" : '<li>';
+			$aClass = ( ! empty( $node->class ) ) ? " class='{$node->class}'" : null;
+			$nodes .= "{$li}<a href='{$node->url}'{$aClass}>{$node->label}</li>";
+		}
+
+		return $begin . $nodes . $end;
+	}
 	
 	/**
 	 * Loads the configuration variables into constants.
@@ -93,7 +113,7 @@ class main {
 			$decoded = json_decode( file_get_contents( $conf ) );
 			define( "SITE_TITLE", ( ! empty( $decoded->title ) ? $decoded->title : 'Undefined' ) );
 			define( "SITE_THEME", ( ! empty( $decoded->theme ) ? SITE_THEMES_DIR . "/{$decoded->theme}" : null ) );
-			define( "SITE_MENU", $decoded->menu );
+			define( "SITE_MENU", $this->menuGenerator( $decoded->menu ) );
 		} else {
 			# TODO
 		}

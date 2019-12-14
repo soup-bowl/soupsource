@@ -1,12 +1,21 @@
 {
 	"title": "Example",
 	"theme": "basis",
-	"menu": [
-		[
-			"Home","/"
+	"menu": {
+		"nodes": [
+			{
+				"label": "Home",
+				"url": "/",
+				"class": "nav-link",
+				"liclass": "nav-item"
+			},
+			{
+				"label": "Example",
+				"url": "/example",
+				"class": "nav-link",
+				"liclass": "nav-item"
+			}
 		],
-		[
-			"Example","/sample"
-		]
-	]
+		"class": "navbar-nav mr-auto"
+	}
 }
