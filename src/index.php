@@ -26,7 +26,7 @@ class main {
 			);
 		} else {
 			http_response_code( 404 );
-			$error404page = __DIR__ . '/pages/404.md';
+			$error404page = SITE_PAGES_DIR . '/404.md';
 			if ( file_exists( $error404page ) ) {
 				$this->printer(
 					$this->parser->text(
@@ -61,14 +61,14 @@ class main {
 	 */
 	private function urlParser( string $request_uri ):?string {
 		if ( $request_uri === '/' ) {
-			if ( file_exists( __DIR__ . '/pages/index.md' ) ) {
-				return __DIR__ . '/pages/index.md';
+			if ( file_exists( SITE_PAGES_DIR . '/index.md' ) ) {
+				return SITE_PAGES_DIR . '/index.md';
 			} else {
 				return null;
 			}
 		}
 
-		$file = __DIR__ . '/pages' . $request_uri . '.md';
+		$file = SITE_PAGES_DIR . $request_uri . '.md';
 		if ( file_exists( $file ) ) {
 			return $file;
 		} else {
@@ -81,22 +81,22 @@ class main {
 	 *
 	 * @return void Variables in site.json are loaded into SITE_XXX in constants.
 	 */
-	private function loadSettings():void {
-		$prefix   = 'SITE_';
-		$confFile = __DIR__ . '/site.json';
-		if ( file_exists( $confFile ) ) {
-			$decoded = json_decode( file_get_contents( $confFile ) );
-			foreach ( $decoded as $key => $value ) {
-				if ( $key === 'theme' && ! empty( $value ) ) {
-					$value = realpath( __DIR__ . '/themes/' . $value );
-				}
-
-				define( $prefix . strtoupper( $key ), ( ! empty( $value ) ? $value : null ) );
-			}
+	private function loadSettings():void {		
+		// System confiurations.
+		define( 'SITE_ROOT_DIR', realpath( __DIR__ ) );
+		define( 'SITE_THEMES_DIR', realpath( SITE_ROOT_DIR . '/themes' ) );
+		define( 'SITE_PAGES_DIR', realpath( SITE_ROOT_DIR . '/pages' ) );
+		
+		$conf = __DIR__ . '/site.json';
+		if ( file_exists( $conf ) ) {
+			// site.json configurations.
+			$decoded = json_decode( file_get_contents( $conf ) );
+			define( "SITE_TITLE", ( ! empty( $decoded->title ) ? $decoded->title : 'Undefined' ) );
+			define( "SITE_THEME", ( ! empty( $decoded->theme ) ? SITE_THEMES_DIR . "/{$decoded->theme}" : null ) );
+			define( "SITE_MENU", $decoded->menu );
+		} else {
+			# TODO
 		}
-
-		// Defaults
-		( defined( "{$prefix}TITLE" ) ? null : define( "{$prefix}TITLE", 'Undefined' ) );
 	}
 }
 

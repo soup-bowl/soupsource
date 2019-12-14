@@ -1,4 +1,12 @@
 {
 	"title": "Example",
-	"theme": "basis"
+	"theme": "basis",
+	"menu": [
+		[
+			"Home","/"
+		],
+		[
+			"Example","/sample"
+		]
+	]
 }
