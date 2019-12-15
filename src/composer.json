@@ -1,4 +1,6 @@
 {
+    "name": "soup-bowl/soupsource",
+    "description": "A tiny, minimal markdown-lead website CMS.",
     "require": {
         "erusev/parsedown": "^1.7"
     },
