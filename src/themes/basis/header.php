@@ -5,7 +5,10 @@
 <body style="padding-top: 5rem;">
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 		<a class="navbar-brand" href="/"><?php echo SITE_TITLE;?></a>
-		<div class="collapse navbar-collapse">
+		<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#savvyNavvy" aria-controls="savvyNavvy" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="navbar-collapse collapse" id="savvyNavvy">
 			<?php echo SITE_MENU;?>
 		</div>
 	</nav>
